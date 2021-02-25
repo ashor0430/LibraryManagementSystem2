@@ -24,13 +24,13 @@ function GetBackData(bookData){
   let sheet = TriggerSS.getSheetByName(bookData.sheetName);
 
   let lastRow = sheet.getLastRow();
-  let range = sheet.getRange("B:D");
+  let range = sheet.getRange("A:D");
 
   let answers = {};
-  answers.bookNumber = bookData.bookNumber;
-  answers.employeeName = range.getCell(lastRow, 1).getValue();
-  answers.employeeNumber = range.getCell(lastRow, 2).getValue();
-  answers.backDate = range.getCell(lastRow, 3).getValue();
+  answers.bookNumber = range.getCell(lastRow, 2).getValue();
+  answers.employeeName = range.getCell(lastRow, 3).getValue();
+  answers.employeeNumber = range.getCell(lastRow, 4).getValue();
+  answers.backDate = range.getCell(lastRow, 1).getValue();
 
   if (answers.employeeName == null || answers.employeeName == "" ||
       answers.employeeNumber == null || answers.employeeNumber == "" ||
@@ -44,7 +44,7 @@ function GetBackData(bookData){
     InsertError(error);
     return;
   }
-  
+  // Logger.log(answers);
   return answers;
 }
 
