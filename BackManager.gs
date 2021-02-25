@@ -115,6 +115,11 @@ function ResetStatus(answers, SS){
         InsertError(error);
         return;
       }
+      if (STATUS_SHEET.getRange(i, 4).getCell(1, 1).getValue() != answers.employeeNumber){
+        error.what = "本を借りた人と返した人の社員番号が違います";
+        InsertError(error);
+        return;
+      }
       let cells = STATUS_SHEET.getRange(i, 3, 1, 4);
       cells.clear();
       flag++;
