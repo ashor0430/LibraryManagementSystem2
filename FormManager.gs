@@ -10,14 +10,14 @@ function ManageLibrary(){
   error.where = "ManageLibrary(FormManager)";
 
   try {
-    const SS = SpreadsheetApp.openById("1yNNGqzBplAVxBqNMa6D_0eskQzMIy89NPrE1uGlYbfs");
+    const SS = SpreadsheetApp.openById("1B0o8vSi7S3ml8GyfkxgQR8SSYm3KagW8a_5xJalONDw");
   }
   catch (e) {
     error.what = "スプレッドシート「図書貸出管理」のIDが間違っています";
     InsertError(error);
     return;
   }
-  const SS = SpreadsheetApp.openById("1yNNGqzBplAVxBqNMa6D_0eskQzMIy89NPrE1uGlYbfs");
+  const SS = SpreadsheetApp.openById("1B0o8vSi7S3ml8GyfkxgQR8SSYm3KagW8a_5xJalONDw");
 
   const TriggerSS = SpreadsheetApp.getActiveSpreadsheet();
   const SHEETS = TriggerSS.getSheets();
@@ -47,15 +47,17 @@ function ManageLibrary(){
     if (sortedTimestamp[0].toString() == timestamp[i].toString()){
       var triggerSheet = SHEETS[i]; 
       bookData.sheetName = triggerSheet.getName();
-      var sheetNameSplit = triggerSheet.getName().split("-");
-      bookData.bookNumber = sheetNameSplit[0];
     }
   }
 
   if (bookData.sheetName.indexOf("貸出")　>= 0){
-    BorrowBook(bookData, SS);
+
+    var sheetNameSplit = triggerSheet.getName().split("-");
+    bookData.bookNumber = sheetNameSplit[0];
+    BorrowBook(bookData, SS);  //bookData = {sheetName, bookNumber}
+
   } else if(bookData.sheetName.indexOf("返却")　>= 0){
-    BackBook(bookData, SS);
+    BackBook(bookData, SS);  //bookData = {sheetName}
   }
 }
 
@@ -70,7 +72,7 @@ function CreateNewForm() {
   error.formAnswer2 = "";
 
   try {
-    const SS = SpreadsheetApp.openById("1yNNGqzBplAVxBqNMa6D_0eskQzMIy89NPrE1uGlYbfs");
+    const SS = SpreadsheetApp.openById("1B0o8vSi7S3ml8GyfkxgQR8SSYm3KagW8a_5xJalONDw");
   }
   catch (e) {
     // Logger.log("error");
@@ -80,7 +82,7 @@ function CreateNewForm() {
     InsertError(error);
     return;
   }
-  const SS = SpreadsheetApp.openById("1yNNGqzBplAVxBqNMa6D_0eskQzMIy89NPrE1uGlYbfs");
+  const SS = SpreadsheetApp.openById("1B0o8vSi7S3ml8GyfkxgQR8SSYm3KagW8a_5xJalONDw");
   
   const STATUS_SHEET = SS.getSheetByName("貸出状況");
   if (STATUS_SHEET == null){
@@ -148,7 +150,7 @@ function CreateNewForm() {
 
   //貸出フォームをフォームフォルダへ移動
   try {
-    DriveApp.getFolderById("1Wcv9gLhsLTftWAbnTaqrE5NTKShw0E-V").addFile(borrowFormFile);
+    DriveApp.getFolderById("1KHmGcuQO2BOo3I5uLZgppsd5vNsyU_CM").addFile(borrowFormFile);
     DriveApp.getRootFolder().removeFile(borrowFormFile);
   }
   catch (e) {
@@ -163,31 +165,31 @@ function CreateNewForm() {
   range.getCell(lastRow, 7).setValue(borrowFormId);
 
 
-  //返却フォームの作成
-  let backFormTitle = bookNumber + "-『" + bookTitle + "』の返却";
+  // //返却フォームの作成
+  // let backFormTitle = bookNumber + "-『" + bookTitle + "』の返却";
 
-  let backForm = FormApp.create(backFormTitle);
-  let backFormId = backForm.getId();
-  let backFormFile = DriveApp.getFileById(backFormId);
+  // let backForm = FormApp.create(backFormTitle);
+  // let backFormId = backForm.getId();
+  // let backFormFile = DriveApp.getFileById(backFormId);
  
-  // backForm.setDescription();
-  backForm.addTextItem().setTitle("お名前").setRequired(true);
-  backForm.addTextItem().setTitle("社員番号").setRequired(true).setValidation(validation);//社員番号を数字のみ入力可に
-  backForm.addDateItem().setTitle('返却日').setRequired(true);
+  // // backForm.setDescription();
+  // backForm.addTextItem().setTitle("お名前").setRequired(true);
+  // backForm.addTextItem().setTitle("社員番号").setRequired(true).setValidation(validation);//社員番号を数字のみ入力可に
+  // backForm.addDateItem().setTitle('返却日').setRequired(true);
 
-  //返却フォームをフォームフォルダへ移動
-  try {
-    DriveApp.getFolderById("1Wcv9gLhsLTftWAbnTaqrE5NTKShw0E-V").addFile(backFormFile);
-    DriveApp.getRootFolder().removeFile(backFormFile);
-  }
-  catch (e) {
-    error.book = bookNumber　+"-返却";
-    error.where = "CreateNewForm(FormManager)";
-    error.what = "フォームフォルダのIDが間違っています";
-    InsertError(error);
-    return;
-  }
-  DriveApp.getRootFolder().removeFile(backFormFile);
+  // //返却フォームをフォームフォルダへ移動
+  // try {
+  //   DriveApp.getFolderById("1Wcv9gLhsLTftWAbnTaqrE5NTKShw0E-V").addFile(backFormFile);
+  //   DriveApp.getRootFolder().removeFile(backFormFile);
+  // }
+  // catch (e) {
+  //   error.book = bookNumber　+"-返却";
+  //   error.where = "CreateNewForm(FormManager)";
+  //   error.what = "フォームフォルダのIDが間違っています";
+  //   InsertError(error);
+  //   return;
+  // }
+  // DriveApp.getRootFolder().removeFile(backFormFile);
 
   //貸出フォームとシートを紐づけ
   const TRIGGER_SS = SpreadsheetApp.getActiveSpreadsheet();
@@ -205,14 +207,14 @@ function CreateNewForm() {
       InsertError(error);
       return;
     }
-    if (triggerSheets[i].getName() == bookNumber +"-返却"){
-      // Logger.log("in「5-返却」は既に存在しています")
-      error.book = bookNumber +"-返却";
-      error.where = "CreateNewForm(FormManager)";
-      error.what = "フォームと紐づけられた「" + bookNumber + "-返却」シートは既に存在しています。";
-      InsertError(error);
-      return;
-    }
+    // if (triggerSheets[i].getName() == bookNumber +"-返却"){
+    //   // Logger.log("in「5-返却」は既に存在しています")
+    //   error.book = bookNumber +"-返却";
+    //   error.where = "CreateNewForm(FormManager)";
+    //   error.what = "フォームと紐づけられた「" + bookNumber + "-返却」シートは既に存在しています。";
+    //   InsertError(error);
+    //   return;
+    // }
   }
 
   let flag = 0;
@@ -237,30 +239,30 @@ function CreateNewForm() {
     InsertError(error);
   }
 
-  //貸出フォームとシートを紐づけ
-  backForm.setDestination(FormApp.DestinationType.SPREADSHEET, TRIGGER_SS.getId());
+  // //返却フォームとシートを紐づけ
+  // backForm.setDestination(FormApp.DestinationType.SPREADSHEET, TRIGGER_SS.getId());
 
-  //紐づけされたシートの名前変更
-  var triggerSheets = TRIGGER_SS.getSheets();
+  // //紐づけされたシートの名前変更
+  // var triggerSheets = TRIGGER_SS.getSheets();
 
-  flag = 0;
-  for (let i = 0; i < triggerSheets.length; i++) {
-    if (triggerSheets[i].getName().indexOf("フォームの回答") >= 0) {
-      if (flag > 0){
-        error.book = bookNumber +"-返却";
-        error.where = "CreateNewForm(FormManager)";
-        error.what = "（返却シートを紐づけ）新しいシートが２枚以上あります";
-        InsertError(error);
-        break;
-      }
-      triggerSheets[i].setName(bookNumber + "-返却");
-      flag++;
-    }
-  }
-  if (flag == 0){
-    error.book = bookNumber +"-返却";
-    error.where = "CreateNewForm(FormManager)";
-    error.what = "（返却シートを紐づけ）新しいシートがありません（返却シートの名前が変更できませんでした）";
-    InsertError(error);
-  }
+  // flag = 0;
+  // for (let i = 0; i < triggerSheets.length; i++) {
+  //   if (triggerSheets[i].getName().indexOf("フォームの回答") >= 0) {
+  //     if (flag > 0){
+  //       error.book = bookNumber +"-返却";
+  //       error.where = "CreateNewForm(FormManager)";
+  //       error.what = "（返却シートを紐づけ）新しいシートが２枚以上あります";
+  //       InsertError(error);
+  //       break;
+  //     }
+  //     triggerSheets[i].setName(bookNumber + "-返却");
+  //     flag++;
+  //   }
+  // }
+  // if (flag == 0){
+  //   error.book = bookNumber +"-返却";
+  //   error.where = "CreateNewForm(FormManager)";
+  //   error.what = "（返却シートを紐づけ）新しいシートがありません（返却シートの名前が変更できませんでした）";
+  //   InsertError(error);
+  // }
 }
