@@ -1,4 +1,5 @@
 function InsertError(error) {
+  Logger.log(error.where + "でエラーが発生しました")
   
   const SS = SpreadsheetApp.openById("1B0o8vSi7S3ml8GyfkxgQR8SSYm3KagW8a_5xJalONDw");
   const ERROR_SHEET = SS.getSheetByName("エラー用");

@@ -121,10 +121,7 @@ function ResisterStatus(answers, SS){
         InsertError(error);
         return;
       }
-      range.getCell(i, 3).setValue(answers.employeeName);
-      range.getCell(i, 4).setValue(answers.employeeNumber);
-      range.getCell(i, 5).setValue(answers.borrowDate);
-      range.getCell(i, 6).setValue(answers.backDeadline);
+      var statusCells = STATUS_SHEET.getRange(i, 3, 1, 4);
       flag++;
     }
   }
@@ -133,6 +130,23 @@ function ResisterStatus(answers, SS){
     InsertError(error);
     return;
   }
+  // Logger.log(statusCells.getValue());
+  if (statusCells.getCell(1, 2).getValue() == answers.employeeNumber){
+    error.what = "この本の貸出はもう済んでいます";
+    InsertError(error);
+    return;
+  }
+  if (statusCells.getValue() != ""){
+    // Logger.log("in");
+    error.what = "この本はすでに貸し出されています";
+    InsertError(error);
+    return;
+  }
+  statusCells.getCell(1, 1).setValue(answers.employeeName);
+  statusCells.getCell(1, 2).setValue(answers.employeeNumber);
+  statusCells.getCell(1, 3).setValue(answers.borrowDate);
+  statusCells.getCell(1, 4).setValue(answers.backDeadline);
+
 }
 
 function UpdateFormByBorrow(answers, SS){
