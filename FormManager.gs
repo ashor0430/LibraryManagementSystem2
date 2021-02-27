@@ -10,14 +10,15 @@ function ManageLibrary(){
   error.where = "ManageLibrary(FormManager)";
 
   try {
-    const SS = SpreadsheetApp.openById("1B0o8vSi7S3ml8GyfkxgQR8SSYm3KagW8a_5xJalONDw");
+    const SS = SpreadsheetApp.openById(SSId());
   }
   catch (e) {
     error.what = "スプレッドシート「図書貸出管理」のIDが間違っています";
     InsertError(error);
     return;
   }
-  const SS = SpreadsheetApp.openById("1B0o8vSi7S3ml8GyfkxgQR8SSYm3KagW8a_5xJalONDw");
+  const SS = SpreadsheetApp.openById(SSId());
+  Logger.log(SS.getName());
 
   const TriggerSS = SpreadsheetApp.getActiveSpreadsheet();
   const SHEETS = TriggerSS.getSheets();
@@ -72,7 +73,7 @@ function CreateNewForm() {
   error.formAnswer2 = "";
 
   try {
-    const SS = SpreadsheetApp.openById("1B0o8vSi7S3ml8GyfkxgQR8SSYm3KagW8a_5xJalONDw");
+    const SS = SpreadsheetApp.openById(SSId());
   }
   catch (e) {
     // Logger.log("error");
@@ -82,7 +83,7 @@ function CreateNewForm() {
     InsertError(error);
     return;
   }
-  const SS = SpreadsheetApp.openById("1B0o8vSi7S3ml8GyfkxgQR8SSYm3KagW8a_5xJalONDw");
+  const SS = SpreadsheetApp.openById(SSId());
   
   const STATUS_SHEET = SS.getSheetByName("貸出状況");
   if (STATUS_SHEET == null){
@@ -150,7 +151,8 @@ function CreateNewForm() {
 
   //貸出フォームをフォームフォルダへ移動
   try {
-    DriveApp.getFolderById("1KHmGcuQO2BOo3I5uLZgppsd5vNsyU_CM").addFile(borrowFormFile);
+    DriveApp.getFolderById(FormFolderId()).addFile(borrowFormFile);
+    // Logger.log(DriveApp.getFolderById(FormFolderId()).getName());
     DriveApp.getRootFolder().removeFile(borrowFormFile);
   }
   catch (e) {
@@ -179,7 +181,7 @@ function CreateNewForm() {
 
   // //返却フォームをフォームフォルダへ移動
   // try {
-  //   DriveApp.getFolderById("1Wcv9gLhsLTftWAbnTaqrE5NTKShw0E-V").addFile(backFormFile);
+  //   DriveApp.getFolderById(FormFolderId).addFile(backFormFile);
   //   DriveApp.getRootFolder().removeFile(backFormFile);
   // }
   // catch (e) {

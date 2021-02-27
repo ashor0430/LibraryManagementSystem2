@@ -115,13 +115,7 @@ function ResetStatus(answers, SS){
         InsertError(error);
         return;
       }
-      if (STATUS_SHEET.getRange(i, 4).getCell(1, 1).getValue() != answers.employeeNumber){
-        error.what = "本を借りた人と返した人の社員番号が違います";
-        InsertError(error);
-        return;
-      }
-      let cells = STATUS_SHEET.getRange(i, 3, 1, 4);
-      cells.clear();
+      var statusCells = STATUS_SHEET.getRange(i, 3, 1, 4);
       flag++;
     }
   }
@@ -130,6 +124,17 @@ function ResetStatus(answers, SS){
     InsertError(error);
     return;
   }
+  if (statusCells.getValue() == ""){
+      error.what = "この本は現在借りられていません";
+      InsertError(error);
+      return;        
+    } else if (statusCells.getCell(1, 2).getValue() != answers.employeeNumber){
+      error.what = "本を借りた人と返した人の社員番号が違います";
+      InsertError(error);
+      return;
+    }
+
+  statusCells.clear();
 }
 
 function UpdateFormByBack(answers, SS) {
